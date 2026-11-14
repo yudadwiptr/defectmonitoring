@@ -1,26 +1,204 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Varian `dark:` aktif saat html punya kelas .dark, ATAU sistem gelap dan
+  tidak ada kelas .light (pilihan pengguna disimpan di cookie dm-theme).
+*/
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:not(.light, .light *)) {
+      @slot;
+    }
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-display);
+  --font-display: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Warna semantik Defect Monitor */
+  --color-sev-critical: var(--sev-critical);
+  --color-sev-high: var(--sev-high);
+  --color-sev-medium: var(--sev-medium);
+  --color-sev-low: var(--sev-low);
+  --color-st-open: var(--st-open);
+  --color-st-progress: var(--st-progress);
+  --color-st-fixed: var(--st-fixed);
+  --color-st-retest: var(--st-retest);
+  --color-st-closed: var(--st-closed);
+  --color-st-reopened: var(--st-reopened);
+  --color-st-rejected: var(--st-rejected);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+  Palet: "stabilo di atas kertas test report".
+  Dasar putih-kebiruan yang tenang (gelap: indigo pekat), satu aksen ungu
+  elektrik untuk aksi, dan empat warna stabilo untuk severity.
+  Tiap nilai ditulis var(--on-light, terang) var(--on-dark, gelap); mode dipilih lewat color-scheme.
+*/
+/* Saklar tema: hanya satu dari --on-light/--on-dark yang berisi nilai kosong (aktif). */
+html {
+  color-scheme: light;
+  --on-light: initial;
+  --on-dark: ;
+}
+html.dark {
+  color-scheme: dark;
+  --on-light: ;
+  --on-dark: initial;
+}
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html:not(.light) {
+    color-scheme: dark;
+    --on-light: ;
+    --on-dark: initial;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+
+  --background: var(--on-light, #f3f3f9) var(--on-dark, #14132a);
+  --foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
+  --card: var(--on-light, #ffffff) var(--on-dark, #1c1b33);
+  --card-foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
+  --popover: var(--on-light, #ffffff) var(--on-dark, #1f1e38);
+  --popover-foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
+  --primary: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
+  --primary-foreground: var(--on-light, #ffffff) var(--on-dark, #14132a);
+  --secondary: var(--on-light, #ebe9fb) var(--on-dark, #2a2946);
+  --secondary-foreground: var(--on-light, #2f2560) var(--on-dark, #ecebf7);
+  --muted: var(--on-light, #ececf4) var(--on-dark, #262541);
+  --muted-foreground: var(--on-light, #6a6887) var(--on-dark, #a3a2c0);
+  --accent: var(--on-light, #f0edff) var(--on-dark, #2d2b4d);
+  --accent-foreground: var(--on-light, #2f2560) var(--on-dark, #ecebf7);
+  --destructive: var(--on-light, #e5304f) var(--on-dark, #ff5c78);
+  --border: var(--on-light, #e1e0ee) var(--on-dark, rgba(255, 255, 255, 0.09));
+  --input: var(--on-light, #d9d8e8) var(--on-dark, rgba(255, 255, 255, 0.13));
+  --ring: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
+  --chart-1: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
+  --chart-2: var(--on-light, #22b2f2) var(--on-dark, #3cc0ff);
+  --chart-3: var(--on-light, #19c37d) var(--on-dark, #2bd48f);
+  --chart-4: var(--on-light, #f5b800) var(--on-dark, #ffc62e);
+  --chart-5: var(--on-light, #ff3d71) var(--on-dark, #ff5c88);
+  --radius: 0.75rem;
+  --sidebar: var(--on-light, #ffffff) var(--on-dark, #1c1b33);
+  --sidebar-foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
+  --sidebar-primary: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
+  --sidebar-primary-foreground: var(--on-light, #ffffff) var(--on-dark, #14132a);
+  --sidebar-accent: var(--on-light, #f0edff) var(--on-dark, #2d2b4d);
+  --sidebar-accent-foreground: var(--on-light, #2f2560) var(--on-dark, #ecebf7);
+  --sidebar-border: var(--on-light, #e1e0ee) var(--on-dark, rgba(255, 255, 255, 0.09));
+  --sidebar-ring: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
+
+  --sev-critical: var(--on-light, #ff3d71) var(--on-dark, #ff5c88);
+  --sev-high: var(--on-light, #ff7a1a) var(--on-dark, #ff9440);
+  --sev-medium: var(--on-light, #f0b400) var(--on-dark, #ffc62e);
+  --sev-low: var(--on-light, #22b2f2) var(--on-dark, #3cc0ff);
+  --st-open: var(--on-light, #7a7996) var(--on-dark, #8d8caa);
+  --st-progress: var(--on-light, #7c5cff) var(--on-dark, #9d86ff);
+  --st-fixed: var(--on-light, #22b2f2) var(--on-dark, #3cc0ff);
+  --st-retest: var(--on-light, #f0b400) var(--on-dark, #ffc62e);
+  --st-closed: var(--on-light, #19c37d) var(--on-dark, #2bd48f);
+  --st-reopened: var(--on-light, #ff3d71) var(--on-dark, #ff5c88);
+  --st-rejected: var(--on-light, #b1b0c6) var(--on-dark, #6e6d89);
+  --ink: var(--on-light, #19172e) var(--on-dark, #ecebf7);
+  --paper: var(--on-light, #ffffff) var(--on-dark, #1c1b33);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv11";
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 25%, transparent);
+  }
+}
+
+@layer utilities {
+  /* Angka yang rapi di tabel */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Kertas bergaris halus untuk area kosong */
+  .paper-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

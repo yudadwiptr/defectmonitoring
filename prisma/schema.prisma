@@ -1,0 +1,133 @@
+// Defect Monitor - schema portabel SQLite (dev) / PostgreSQL (prod).
+// Pindah ke Postgres: ganti provider menjadi "postgresql" dan DATABASE_URL.
+// Tidak ada tipe/kolom khusus SQLite. Enum sengaja disimpan sebagai String
+// (lihat src/lib/constants.ts) supaya schema identik di kedua database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Workspace {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now()) @map("created_at")
+  projects  Project[]
+
+  @@map("workspaces")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  workspaceId String   @map("workspace_id")
+  name        String
+  /// JSON array urutan fase, mis. ["SIT","UAT","REGRESI","BETA","PROD"]
+  phases      String   @default("[\"SIT\",\"UAT\",\"REGRESI\",\"BETA\",\"PROD\"]")
+  activePhase String   @default("SIT") @map("active_phase")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  workspace    Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  modules      Module[]
+  defects      Defect[]
+  exitCriteria ExitCriteria[]
+
+  @@index([workspaceId])
+  @@map("projects")
+}
+
+model Module {
+  id        String   @id @default(cuid())
+  projectId String   @map("project_id")
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  defects Defect[]
+
+  @@unique([projectId, name])
+  @@map("modules")
+}
+
+model Defect {
+  id          String    @id @default(cuid())
+  projectId   String    @map("project_id")
+  /// Nomor urut per project, dipakai untuk membentuk code DEF-001
+  seq         Int
+  code        String
+  title       String
+  description String    @default("")
+  moduleId    String?   @map("module_id")
+  /// Critical | High | Medium | Low
+  severity    String
+  /// Nama fase tempat defect ditemukan (SIT/UAT/BETA/PROD)
+  phaseFound  String    @map("phase_found")
+  /// Open | In Progress | Fixed | Retest | Closed | Reopened | Rejected
+  status      String    @default("Open")
+  assignee    String?
+  reporter    String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  fixedAt     DateTime? @map("fixed_at")
+  closedAt    DateTime? @map("closed_at")
+  reopenCount Int       @default(0) @map("reopen_count")
+
+  project       Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  module        Module?         @relation(fields: [moduleId], references: [id], onDelete: SetNull)
+  attachments   Attachment[]
+  statusHistory StatusHistory[]
+
+  @@unique([projectId, seq])
+  @@unique([projectId, code])
+  @@index([projectId, status])
+  @@index([projectId, phaseFound])
+  @@index([projectId, severity])
+  @@index([moduleId])
+  @@map("defects")
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  defectId  String   @map("defect_id")
+  filePath  String   @map("file_path")
+  fileName  String   @map("file_name")
+  mimeType  String   @default("application/octet-stream") @map("mime_type")
+  size      Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  defect Defect @relation(fields: [defectId], references: [id], onDelete: Cascade)
+
+  @@index([defectId])
+  @@map("attachments")
+}
+
+model ExitCriteria {
+  id        String @id @default(cuid())
+  projectId String @map("project_id")
+  phase     String
+  severity  String
+  maxOpen   Int    @map("max_open")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, phase, severity])
+  @@map("exit_criteria")
+}
+
+model StatusHistory {
+  id         String   @id @default(cuid())
+  defectId   String   @map("defect_id")
+  fromStatus String?  @map("from_status")
+  toStatus   String   @map("to_status")
+  changedAt  DateTime @default(now()) @map("changed_at")
+  changedBy  String?  @map("changed_by")
+
+  defect Defect @relation(fields: [defectId], references: [id], onDelete: Cascade)
+
+  @@index([defectId, changedAt])
+  @@map("status_history")
+}
