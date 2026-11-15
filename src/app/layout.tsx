@@ -69,6 +69,22 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col selection:bg-primary/20 selection:text-primary">
         <TooltipProvider>{children}</TooltipProvider>
+        <footer className="mt-auto border-t bg-card/50 backdrop-blur-xs">
+          <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground sm:px-6">
+            <span>{BRAND.name} · Ruang Pantau Kualitas &amp; Rilis Aplikasi</span>
+            <span>
+              Build by{" "}
+              <a
+                href="https://yumastudio.digital/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-display font-semibold text-foreground underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
+              >
+                yumastudio.digital
+              </a>
+            </span>
+          </div>
+        </footer>
         <Toaster position="bottom-right" richColors closeButton />
       </body>
     </html>
