@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
+import { BRAND } from "./brand";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,9 +22,35 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["500", "600", "700"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: { default: "Defect Monitor", template: "%s · Defect Monitor" },
-  description: "Monitoring defect per fase pengujian",
+  metadataBase: new URL(SITE_URL),
+  title: { default: `${BRAND.name} · ${BRAND.tagline}`, template: `%s · ${BRAND.name}` },
+  description: BRAND.description,
+  applicationName: BRAND.name,
+  keywords: ["defect tracking", "QA", "bug log", "defect leakage", "exit criteria", "SIT", "UAT", "regresi", "software testing"],
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    siteName: BRAND.name,
+    title: BRAND.name,
+    description: BRAND.tagline,
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: BRAND.name,
+    description: BRAND.tagline,
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: BRAND.violet },
+    { media: "(prefers-color-scheme: dark)", color: "#14132a" },
+  ],
 };
 
 const THEME_COOKIE = "dm-theme";
