@@ -37,22 +37,26 @@ export default async function DefectListPage({ params, searchParams }: PageProps
   const exportHref = `/projects/${id}/defects/export${exportQs.size ? `?${exportQs}` : ""}`;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold">Defect</h1>
-          <p className="text-sm text-muted-foreground">
-            Klik status untuk memindahkannya langsung. Tekan <kbd className="rounded border bg-muted px-1 font-mono text-xs">N</kbd> untuk mencatat yang baru.
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            Catatan Kendala &amp; Perbaikan
+          </span>
+          <h1 className="font-display text-2xl font-extrabold sm:text-3xl">Daftar Temuan</h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            Klik label status pada tabel untuk mengubah progres secara instan, atau tekan{" "}
+            <kbd className="rounded border bg-muted px-1.5 py-0.5 font-mono text-xs font-semibold">N</kbd> untuk mencatat temuan baru.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" nativeButton={false} render={<Link href={`/projects/${id}/import`} />}>
             <Upload data-icon="inline-start" />
-            Impor Excel
+            Impor dari Excel
           </Button>
           <Button variant="outline" size="sm" nativeButton={false} render={<a href={exportHref} />} title="Mengikuti filter yang sedang aktif">
             <Download data-icon="inline-start" />
-            Ekspor Excel ({defects.length})
+            Unduh Excel ({defects.length})
           </Button>
         </div>
       </div>

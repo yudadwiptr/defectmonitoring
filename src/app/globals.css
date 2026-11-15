@@ -78,12 +78,6 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/*
-  Palet: "stabilo di atas kertas test report".
-  Dasar putih-kebiruan yang tenang (gelap: indigo pekat), satu aksen ungu
-  elektrik untuk aksi, dan empat warna stabilo untuk severity.
-  Tiap nilai ditulis var(--on-light, terang) var(--on-dark, gelap); mode dipilih lewat color-scheme.
-*/
 /* Saklar tema: hanya satu dari --on-light/--on-dark yang berisi nilai kosong (aktif). */
 html {
   color-scheme: light;
@@ -104,53 +98,52 @@ html.dark {
 }
 
 :root {
+  --background: var(--on-light, #f7f7fb) var(--on-dark, #0f0e1c);
+  --foreground: var(--on-light, #16152b) var(--on-dark, #f2f1fb);
+  --card: var(--on-light, #ffffff) var(--on-dark, #18172c);
+  --card-foreground: var(--on-light, #16152b) var(--on-dark, #f2f1fb);
+  --popover: var(--on-light, #ffffff) var(--on-dark, #1c1b33);
+  --popover-foreground: var(--on-light, #16152b) var(--on-dark, #f2f1fb);
+  --primary: var(--on-light, #4f46e5) var(--on-dark, #818cf8);
+  --primary-foreground: var(--on-light, #ffffff) var(--on-dark, #0f0e1c);
+  --secondary: var(--on-light, #eef0ff) var(--on-dark, #252342);
+  --secondary-foreground: var(--on-light, #312e81) var(--on-dark, #e0e7ff);
+  --muted: var(--on-light, #f0eff8) var(--on-dark, #211f3a);
+  --muted-foreground: var(--on-light, #646282) var(--on-dark, #9f9dc0);
+  --accent: var(--on-light, #ede9fe) var(--on-dark, #2b284d);
+  --accent-foreground: var(--on-light, #3730a3) var(--on-dark, #e0e7ff);
+  --destructive: var(--on-light, #e11d48) var(--on-dark, #fb7185);
+  --border: var(--on-light, #e4e3f1) var(--on-dark, rgba(255, 255, 255, 0.09));
+  --input: var(--on-light, #dcdbe9) var(--on-dark, rgba(255, 255, 255, 0.14));
+  --ring: var(--on-light, #4f46e5) var(--on-dark, #818cf8);
+  --chart-1: var(--on-light, #4f46e5) var(--on-dark, #818cf8);
+  --chart-2: var(--on-light, #0ea5e9) var(--on-dark, #38bdf8);
+  --chart-3: var(--on-light, #10b981) var(--on-dark, #34d399);
+  --chart-4: var(--on-light, #f59e0b) var(--on-dark, #fbbf24);
+  --chart-5: var(--on-light, #f43f5e) var(--on-dark, #fb7185);
+  --radius: 0.85rem;
+  --sidebar: var(--on-light, #ffffff) var(--on-dark, #18172c);
+  --sidebar-foreground: var(--on-light, #16152b) var(--on-dark, #f2f1fb);
+  --sidebar-primary: var(--on-light, #4f46e5) var(--on-dark, #818cf8);
+  --sidebar-primary-foreground: var(--on-light, #ffffff) var(--on-dark, #0f0e1c);
+  --sidebar-accent: var(--on-light, #ede9fe) var(--on-dark, #2b284d);
+  --sidebar-accent-foreground: var(--on-light, #3730a3) var(--on-dark, #e0e7ff);
+  --sidebar-border: var(--on-light, #e4e3f1) var(--on-dark, rgba(255, 255, 255, 0.09));
+  --sidebar-ring: var(--on-light, #4f46e5) var(--on-dark, #818cf8);
 
-  --background: var(--on-light, #f3f3f9) var(--on-dark, #14132a);
-  --foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
-  --card: var(--on-light, #ffffff) var(--on-dark, #1c1b33);
-  --card-foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
-  --popover: var(--on-light, #ffffff) var(--on-dark, #1f1e38);
-  --popover-foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
-  --primary: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
-  --primary-foreground: var(--on-light, #ffffff) var(--on-dark, #14132a);
-  --secondary: var(--on-light, #ebe9fb) var(--on-dark, #2a2946);
-  --secondary-foreground: var(--on-light, #2f2560) var(--on-dark, #ecebf7);
-  --muted: var(--on-light, #ececf4) var(--on-dark, #262541);
-  --muted-foreground: var(--on-light, #6a6887) var(--on-dark, #a3a2c0);
-  --accent: var(--on-light, #f0edff) var(--on-dark, #2d2b4d);
-  --accent-foreground: var(--on-light, #2f2560) var(--on-dark, #ecebf7);
-  --destructive: var(--on-light, #e5304f) var(--on-dark, #ff5c78);
-  --border: var(--on-light, #e1e0ee) var(--on-dark, rgba(255, 255, 255, 0.09));
-  --input: var(--on-light, #d9d8e8) var(--on-dark, rgba(255, 255, 255, 0.13));
-  --ring: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
-  --chart-1: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
-  --chart-2: var(--on-light, #22b2f2) var(--on-dark, #3cc0ff);
-  --chart-3: var(--on-light, #19c37d) var(--on-dark, #2bd48f);
-  --chart-4: var(--on-light, #f5b800) var(--on-dark, #ffc62e);
-  --chart-5: var(--on-light, #ff3d71) var(--on-dark, #ff5c88);
-  --radius: 0.75rem;
-  --sidebar: var(--on-light, #ffffff) var(--on-dark, #1c1b33);
-  --sidebar-foreground: var(--on-light, #19172e) var(--on-dark, #ecebf7);
-  --sidebar-primary: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
-  --sidebar-primary-foreground: var(--on-light, #ffffff) var(--on-dark, #14132a);
-  --sidebar-accent: var(--on-light, #f0edff) var(--on-dark, #2d2b4d);
-  --sidebar-accent-foreground: var(--on-light, #2f2560) var(--on-dark, #ecebf7);
-  --sidebar-border: var(--on-light, #e1e0ee) var(--on-dark, rgba(255, 255, 255, 0.09));
-  --sidebar-ring: var(--on-light, #5b3df5) var(--on-dark, #8f7aff);
-
-  --sev-critical: var(--on-light, #ff3d71) var(--on-dark, #ff5c88);
-  --sev-high: var(--on-light, #ff7a1a) var(--on-dark, #ff9440);
-  --sev-medium: var(--on-light, #f0b400) var(--on-dark, #ffc62e);
-  --sev-low: var(--on-light, #22b2f2) var(--on-dark, #3cc0ff);
-  --st-open: var(--on-light, #7a7996) var(--on-dark, #8d8caa);
-  --st-progress: var(--on-light, #7c5cff) var(--on-dark, #9d86ff);
-  --st-fixed: var(--on-light, #22b2f2) var(--on-dark, #3cc0ff);
-  --st-retest: var(--on-light, #f0b400) var(--on-dark, #ffc62e);
-  --st-closed: var(--on-light, #19c37d) var(--on-dark, #2bd48f);
-  --st-reopened: var(--on-light, #ff3d71) var(--on-dark, #ff5c88);
-  --st-rejected: var(--on-light, #b1b0c6) var(--on-dark, #6e6d89);
-  --ink: var(--on-light, #19172e) var(--on-dark, #ecebf7);
-  --paper: var(--on-light, #ffffff) var(--on-dark, #1c1b33);
+  --sev-critical: var(--on-light, #f43f5e) var(--on-dark, #fb7185);
+  --sev-high: var(--on-light, #f97316) var(--on-dark, #fb923c);
+  --sev-medium: var(--on-light, #eab308) var(--on-dark, #facc15);
+  --sev-low: var(--on-light, #0ea5e9) var(--on-dark, #38bdf8);
+  --st-open: var(--on-light, #6366f1) var(--on-dark, #818cf8);
+  --st-progress: var(--on-light, #8b5cf6) var(--on-dark, #a78bfa);
+  --st-fixed: var(--on-light, #0ea5e9) var(--on-dark, #38bdf8);
+  --st-retest: var(--on-light, #f59e0b) var(--on-dark, #fbbf24);
+  --st-closed: var(--on-light, #10b981) var(--on-dark, #34d399);
+  --st-reopened: var(--on-light, #f43f5e) var(--on-dark, #fb7185);
+  --st-rejected: var(--on-light, #94a3b8) var(--on-dark, #64748b);
+  --ink: var(--on-light, #16152b) var(--on-dark, #f2f1fb);
+  --paper: var(--on-light, #ffffff) var(--on-dark, #18172c);
 }
 
 @layer base {
@@ -162,7 +155,11 @@ html.dark {
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "cv11";
+    background-image:
+      radial-gradient(at 0% 0%, color-mix(in oklab, var(--primary) 8%, transparent) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, color-mix(in oklab, var(--sev-low) 7%, transparent) 0px, transparent 45%),
+      radial-gradient(at 50% 100%, color-mix(in oklab, var(--st-progress) 5%, transparent) 0px, transparent 50%);
+    background-attachment: fixed;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -173,10 +170,10 @@ html.dark {
   h3,
   .font-display {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
   }
   ::selection {
-    background: color-mix(in oklab, var(--primary) 25%, transparent);
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
   }
 }
 
@@ -188,9 +185,21 @@ html.dark {
   /* Kertas bergaris halus untuk area kosong */
   .paper-grid {
     background-image:
-      linear-gradient(to right, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px);
-    background-size: 24px 24px;
+      radial-gradient(color-mix(in oklab, var(--primary) 18%, transparent) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  /* Efek bayangan lembut untuk kartu modern */
+  .card-surface {
+    background: var(--card);
+    box-shadow:
+      0 1px 2px rgba(15, 14, 28, 0.03),
+      0 6px 20px -4px rgba(15, 14, 28, 0.05);
+  }
+  .hero-mesh {
+    background:
+      radial-gradient(circle at 85% 15%, color-mix(in oklab, var(--sev-low) 18%, transparent) 0%, transparent 45%),
+      radial-gradient(circle at 15% 85%, color-mix(in oklab, var(--st-progress) 18%, transparent) 0%, transparent 50%),
+      linear-gradient(135deg, color-mix(in oklab, var(--primary) 10%, var(--card)) 0%, var(--card) 100%);
   }
 }
 

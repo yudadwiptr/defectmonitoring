@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { STATUSES, STATUS_HINT } from "@/lib/constants";
 import { changeDefectStatus } from "@/lib/actions/defects";
-import { StatusLabel, STATUS_CLASS } from "./badges";
+import { STATUS_CLASS } from "./badges";
+import type { Status } from "@/lib/constants";
 
 interface StatusMenuProps {
   defectId: string;
@@ -25,6 +26,7 @@ interface StatusMenuProps {
 export function StatusMenu({ defectId, status, size = "sm" }: StatusMenuProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const cls = STATUS_CLASS[status as Status] ?? STATUS_CLASS.Open;
 
   function change(to: string) {
     if (to === status) return;
@@ -45,25 +47,27 @@ export function StatusMenu({ defectId, status, size = "sm" }: StatusMenuProps) {
         aria-label={`Ubah status, sekarang ${status}`}
         disabled={pending}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full border border-transparent bg-transparent pr-1.5 pl-2 outline-none transition-colors",
-          "hover:border-border hover:bg-muted/60 focus-visible:ring-3 focus-visible:ring-ring/50 aria-expanded:border-border aria-expanded:bg-muted",
-          size === "sm" ? "h-7" : "h-8",
+          "inline-flex items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold ring-1 ring-inset outline-none transition-all",
+          "hover:brightness-95 focus-visible:ring-3 focus-visible:ring-ring/50",
+          cls.pill,
+          size === "sm" ? "h-6" : "h-7 px-3 text-sm",
           pending && "opacity-60",
         )}
       >
-        <StatusLabel status={status} />
-        <ChevronDown className="size-3.5 text-muted-foreground" />
+        <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", cls.dot)} />
+        <span>{status}</span>
+        <ChevronDown className="size-3 opacity-75" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-72">
+      <DropdownMenuContent align="start" className="w-72 p-1.5">
         {STATUSES.map((s) => (
           <DropdownMenuItem
             key={s}
             onClick={() => change(s)}
-            className={cn("grid grid-cols-[auto_1fr] items-baseline gap-x-2 py-1", s === status && "bg-muted")}
+            className={cn("grid grid-cols-[auto_1fr] items-baseline gap-x-2.5 rounded-lg py-1.5", s === status && "bg-muted")}
           >
             <span className={cn("size-2 translate-y-px rounded-full", STATUS_CLASS[s].dot)} />
             <span className="flex flex-col">
-              <span className="text-sm font-medium leading-5">{s}</span>
+              <span className="text-sm font-semibold leading-5">{s}</span>
               <span className="text-[11px] leading-4 text-muted-foreground">{STATUS_HINT[s]}</span>
             </span>
           </DropdownMenuItem>

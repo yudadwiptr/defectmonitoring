@@ -4,12 +4,12 @@
  */
 export const BRAND = {
   name: "Defect Monitor",
-  tagline: "Tahu di fase mana defect bocor, dan kapan fase siap naik.",
+  tagline: "Pantau kualitas aplikasi, alur perbaikan bug, dan kesiapan rilis dengan mudah.",
   description:
-    "Defect log pengganti Excel untuk tim QA: catat defect dalam hitungan detik, lihat kebocoran antar fase SIT, UAT, REGRESI, BETA, PROD, dan cek apakah fase sudah memenuhi exit criteria.",
-  violet: "#5b3df5",
-  ink: "#19172e",
-  paper: "#f3f3f9",
+    "Workspace kolaboratif pengganti spreadsheet untuk memantau temuan aplikasi, progres perbaikan di setiap tahap pengujian (SIT, UAT, Regresi, Beta, Prod), dan kesiapan rilis.",
+  violet: "#4f46e5",
+  ink: "#181826",
+  paper: "#f8f7fc",
 };
 
 /** Kutu dari Lucide (ISC) sebagai komponen SVG inline berukuran `size`. */

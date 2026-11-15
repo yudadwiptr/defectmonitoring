@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
-import { Search, X } from "lucide-react";
+import { Filter, Search, X } from "lucide-react";
 import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,7 @@ interface DefectFiltersProps {
 }
 
 const selectClass =
-  "h-8 rounded-lg border border-input bg-background px-2 text-sm outline-none transition-colors hover:bg-muted/60 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30";
+  "h-9 rounded-xl border border-input bg-background/90 px-3 text-xs font-medium outline-none transition-colors hover:border-primary/40 hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30";
 
 export function DefectFilters({ phases, modules, resultCount }: DefectFiltersProps) {
   const router = useRouter();
@@ -54,16 +54,59 @@ export function DefectFilters({ phases, modules, resultCount }: DefectFiltersPro
   const hasFilter = ["phase", "severity", "status", "module", "q"].some((k) => params.get(k));
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative">
-          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+    <div className="card-surface flex flex-col gap-3 rounded-2xl border p-3.5 sm:p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div
+          role="tablist"
+          aria-label="Cakupan temuan"
+          className="inline-flex h-9 items-center rounded-xl border bg-muted/60 p-1 text-xs"
+        >
+          {(
+            [
+              ["open", "Sedang Dikerjakan"],
+              ["all", "Semua Riwayat"],
+            ] as const
+          ).map(([value, label]) => (
+            <button
+              key={value}
+              role="tab"
+              type="button"
+              aria-selected={scope === value}
+              onClick={() => update({ scope: value === "open" ? null : "all", status: null })}
+              className={cn(
+                "h-full rounded-lg px-3.5 font-semibold transition-all",
+                scope === value
+                  ? "bg-primary text-primary-foreground shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full border bg-muted/50 px-3 py-1 font-display text-xs font-semibold text-foreground tnum",
+              pending && "opacity-60",
+            )}
+          >
+            <Filter className="size-3 text-primary" />
+            {resultCount} temuan ditampilkan
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 border-t pt-3">
+        <div className="relative flex-1 min-w-56">
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={q}
             onChange={(e) => onSearch(e.target.value)}
-            placeholder="Cari judul atau kode…"
+            placeholder="Cari judul kendala atau kode (mis. DEF-001)…"
             aria-label="Cari defect"
-            className="h-8 w-64 pl-8"
+            className="h-9 rounded-xl bg-background/90 pl-9 text-xs"
           />
         </div>
 
@@ -73,10 +116,10 @@ export function DefectFilters({ phases, modules, resultCount }: DefectFiltersPro
           value={params.get("phase") ?? ""}
           onChange={(e) => update({ phase: e.target.value || null })}
         >
-          <option value="">Semua fase</option>
+          <option value="">Semua Tahap</option>
           {phases.map((p) => (
             <option key={p} value={p}>
-              {p}
+              Tahap {p}
             </option>
           ))}
         </select>
@@ -87,7 +130,7 @@ export function DefectFilters({ phases, modules, resultCount }: DefectFiltersPro
           value={params.get("severity") ?? ""}
           onChange={(e) => update({ severity: e.target.value || null })}
         >
-          <option value="">Semua severity</option>
+          <option value="">Semua Tingkat (Severity)</option>
           {SEVERITIES.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -101,7 +144,7 @@ export function DefectFilters({ phases, modules, resultCount }: DefectFiltersPro
           value={params.get("status") ?? ""}
           onChange={(e) => update({ status: e.target.value || null })}
         >
-          <option value="">{scope === "open" ? "Semua status open" : "Semua status"}</option>
+          <option value="">{scope === "open" ? "Semua Status Aktif" : "Semua Status"}</option>
           {STATUSES.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -115,13 +158,13 @@ export function DefectFilters({ phases, modules, resultCount }: DefectFiltersPro
           value={params.get("module") ?? ""}
           onChange={(e) => update({ module: e.target.value || null })}
         >
-          <option value="">Semua modul</option>
+          <option value="">Semua Bagian/Modul</option>
           {modules.map((m) => (
             <option key={m.id} value={m.id}>
               {m.name}
             </option>
           ))}
-          <option value="none">Tanpa modul</option>
+          <option value="none">Tanpa Modul</option>
         </select>
 
         {hasFilter && (
@@ -131,45 +174,12 @@ export function DefectFilters({ phases, modules, resultCount }: DefectFiltersPro
             onClick={() =>
               update({ phase: null, severity: null, status: null, module: null, q: null })
             }
+            className="h-9 rounded-xl text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive"
           >
             <X data-icon="inline-start" />
-            Bersihkan
+            Reset Filter
           </Button>
         )}
-      </div>
-
-      <div className="flex items-center justify-between gap-3">
-        <div
-          role="tablist"
-          aria-label="Cakupan"
-          className="inline-flex h-8 items-center rounded-lg bg-muted p-[3px] text-sm"
-        >
-          {(
-            [
-              ["open", "Masih open"],
-              ["all", "Semua"],
-            ] as const
-          ).map(([value, label]) => (
-            <button
-              key={value}
-              role="tab"
-              type="button"
-              aria-selected={scope === value}
-              onClick={() => update({ scope: value === "open" ? null : "all", status: null })}
-              className={cn(
-                "h-full rounded-md px-3 font-medium transition-colors",
-                scope === value
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <p className={cn("text-sm text-muted-foreground tnum", pending && "opacity-60")}>
-          {resultCount} defect
-        </p>
       </div>
     </div>
   );

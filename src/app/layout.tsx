@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { BRAND } from "./brand";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono, Outfit } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-const geistSans = Geist({
+const jakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -16,10 +17,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const outfitDisplay = Outfit({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: BRAND.violet },
-    { media: "(prefers-color-scheme: dark)", color: "#14132a" },
+    { media: "(prefers-color-scheme: dark)", color: "#111022" },
   ],
 };
 
@@ -64,9 +65,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="id"
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${themeClass} h-full antialiased`}
+      className={`${jakartaSans.variable} ${geistMono.variable} ${outfitDisplay.variable} ${themeClass} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col selection:bg-primary/20 selection:text-primary">
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster position="bottom-right" richColors closeButton />
       </body>

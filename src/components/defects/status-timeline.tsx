@@ -1,3 +1,4 @@
+import { ArrowRight } from "lucide-react";
 import { cn } from "cn";
 import type { Status } from "@/lib/constants";
 import { formatDateTime } from "@/lib/format";
@@ -12,29 +13,35 @@ interface HistoryItem {
 
 export function StatusTimeline({ items }: { items: HistoryItem[] }) {
   if (items.length === 0) {
-    return <p className="text-sm text-muted-foreground">Belum ada riwayat.</p>;
+    return <p className="text-sm text-muted-foreground">Belum ada riwayat perubahan status.</p>;
   }
   const ordered = [...items].reverse();
   return (
-    <ol className="relative flex flex-col gap-3 pl-4 before:absolute before:top-1 before:bottom-1 before:left-[5px] before:w-px before:bg-border">
+    <ol className="relative flex flex-col gap-3 pl-5 before:absolute before:top-2 before:bottom-2 before:left-[7px] before:w-0.5 before:bg-border">
       {ordered.map((h, i) => {
         const cls = STATUS_CLASS[h.toStatus as Status] ?? STATUS_CLASS.Open;
         return (
-          <li key={h.id} className="relative text-sm">
+          <li key={h.id} className="relative rounded-xl border bg-muted/30 px-3 py-2 text-xs">
             <span
               aria-hidden
               className={cn(
-                "absolute top-1.5 -left-4 size-[11px] rounded-full ring-2 ring-background",
+                "absolute top-3 -left-[18px] size-3 rounded-full ring-2 ring-card",
                 cls.dot,
-                i === 0 && "shadow-[0_0_0_3px_color-mix(in_oklab,var(--primary)_18%,transparent)]",
+                i === 0 && "shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_20%,transparent)]",
               )}
             />
-            <div className="flex flex-wrap items-baseline gap-x-2">
-              <span className={cn("font-medium", i === 0 ? "text-foreground" : "text-muted-foreground")}>
-                {h.fromStatus ? `${h.fromStatus} → ${h.toStatus}` : `Dilaporkan sebagai ${h.toStatus}`}
-              </span>
+            <div className="flex flex-wrap items-center gap-1.5 font-semibold">
+              {h.fromStatus ? (
+                <>
+                  <span className="text-muted-foreground">{h.fromStatus}</span>
+                  <ArrowRight className="size-3 text-muted-foreground" />
+                  <span className="text-foreground">{h.toStatus}</span>
+                </>
+              ) : (
+                <span className="text-foreground">Dicatat pertama kali ({h.toStatus})</span>
+              )}
             </div>
-            <div className="text-xs text-muted-foreground tnum">{formatDateTime(h.changedAt)}</div>
+            <div className="mt-0.5 text-[11px] text-muted-foreground tnum">{formatDateTime(h.changedAt)}</div>
           </li>
         );
       })}

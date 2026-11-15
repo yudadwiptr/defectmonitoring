@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { ShieldCheck, SlidersHorizontal } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getProject } from "@/lib/queries";
 import { checkExitCriteria, openBySeverity } from "@/lib/metrics";
@@ -32,23 +33,33 @@ export default async function ExitCriteriaPage({ params }: PageProps<"/projects/
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">Exit criteria</h1>
-        <p className="text-sm text-muted-foreground">
-          Sebuah fase siap naik kalau jumlah defect open di fase itu, per severity, tidak melebihi batas.
+        <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+          Standar Kelulusan Tahap Uji
+        </span>
+        <h1 className="font-display text-2xl font-extrabold sm:text-3xl">Syarat Lulus (Exit Criteria)</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
+          Tentukan batas maksimal temuan yang masih boleh aktif pada setiap tahap sebelum aplikasi dinyatakan siap lanjut ke tahap berikutnya.
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-5">
         {checks.map((c) => (
           <ExitStatusCard key={c.phase} projectId={id} check={c} active={c.phase === project.activePhase} />
         ))}
       </div>
 
-      <section className="rounded-2xl border bg-card p-5">
-        <h2 className="font-display text-base font-semibold">Batas defect open per fase</h2>
-        <p className="mb-4 mt-0.5 text-xs text-muted-foreground">
-          Angka di samping tiap kotak adalah defect open saat ini di fase dan severity itu.
-        </p>
+      <section className="card-surface rounded-3xl border p-6">
+        <div className="mb-4 flex items-start gap-3">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary">
+            <SlidersHorizontal className="size-4.5" />
+          </span>
+          <div>
+            <h2 className="font-display text-base font-bold">Pengaturan Batas Maksimal Temuan Aktif</h2>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Angka di sebelah tiap kolom input menunjukkan jumlah temuan yang saat ini masih aktif pada tahap &amp; tingkat keparahan tersebut.
+            </p>
+          </div>
+        </div>
         <ExitCriteriaForm projectId={id} phases={project.phaseList} initial={initial} openNow={openNow} />
       </section>
     </div>

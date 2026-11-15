@@ -13,7 +13,7 @@ export const SEVERITY_CLASS: Record<Severity, { pill: string; bar: string; dot: 
     dot: "bg-sev-high",
   },
   Medium: {
-    pill: "bg-sev-medium/15 text-[color-mix(in_oklab,var(--sev-medium)_70%,var(--foreground))] ring-sev-medium/35",
+    pill: "bg-sev-medium/15 text-[color-mix(in_oklab,var(--sev-medium)_75%,var(--foreground))] ring-sev-medium/35",
     bar: "bg-sev-medium",
     dot: "bg-sev-medium",
   },
@@ -24,14 +24,42 @@ export const SEVERITY_CLASS: Record<Severity, { pill: string; bar: string; dot: 
   },
 };
 
-export const STATUS_CLASS: Record<Status, { dot: string; text: string }> = {
-  Open: { dot: "bg-st-open", text: "text-foreground" },
-  "In Progress": { dot: "bg-st-progress", text: "text-foreground" },
-  Fixed: { dot: "bg-st-fixed", text: "text-foreground" },
-  Retest: { dot: "bg-st-retest", text: "text-foreground" },
-  Closed: { dot: "bg-st-closed", text: "text-muted-foreground" },
-  Reopened: { dot: "bg-st-reopened", text: "text-foreground" },
-  Rejected: { dot: "bg-st-rejected", text: "text-muted-foreground line-through" },
+export const STATUS_CLASS: Record<Status, { dot: string; text: string; pill: string }> = {
+  Open: {
+    dot: "bg-st-open",
+    text: "text-foreground",
+    pill: "bg-st-open/12 text-st-open ring-st-open/25",
+  },
+  "In Progress": {
+    dot: "bg-st-progress",
+    text: "text-foreground",
+    pill: "bg-st-progress/12 text-st-progress ring-st-progress/25",
+  },
+  Fixed: {
+    dot: "bg-st-fixed",
+    text: "text-foreground",
+    pill: "bg-st-fixed/12 text-st-fixed ring-st-fixed/25",
+  },
+  Retest: {
+    dot: "bg-st-retest",
+    text: "text-foreground",
+    pill: "bg-st-retest/15 text-[color-mix(in_oklab,var(--st-retest)_75%,var(--foreground))] ring-st-retest/30",
+  },
+  Closed: {
+    dot: "bg-st-closed",
+    text: "text-muted-foreground",
+    pill: "bg-st-closed/12 text-st-closed ring-st-closed/25",
+  },
+  Reopened: {
+    dot: "bg-st-reopened",
+    text: "text-foreground",
+    pill: "bg-st-reopened/12 text-st-reopened ring-st-reopened/25",
+  },
+  Rejected: {
+    dot: "bg-st-rejected",
+    text: "text-muted-foreground line-through",
+    pill: "bg-muted text-muted-foreground ring-border line-through",
+  },
 };
 
 function sevClass(s: string) {
@@ -43,14 +71,16 @@ function stClass(s: string) {
 }
 
 export function SeverityPill({ severity, className }: { severity: string; className?: string }) {
+  const c = sevClass(severity);
   return (
     <span
       className={cn(
-        "inline-flex h-5 items-center rounded-md px-1.5 text-[11px] font-semibold uppercase tracking-wide ring-1 ring-inset",
-        sevClass(severity).pill,
+        "inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-bold tracking-wide ring-1 ring-inset",
+        c.pill,
         className,
       )}
     >
+      <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", c.dot)} />
       {severity}
     </span>
   );
@@ -68,8 +98,14 @@ export function SeverityDot({ severity, className }: { severity: string; classNa
 export function StatusLabel({ status, className }: { status: string; className?: string }) {
   const c = stClass(status);
   return (
-    <span className={cn("inline-flex items-center gap-1.5 text-sm", c.text, className)}>
-      <span aria-hidden className={cn("size-2 shrink-0 rounded-full", c.dot)} />
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset",
+        c.pill,
+        className,
+      )}
+    >
+      <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", c.dot)} />
       {status}
     </span>
   );
@@ -77,7 +113,12 @@ export function StatusLabel({ status, className }: { status: string; className?:
 
 export function DefectCode({ code, className }: { code: string; className?: string }) {
   return (
-    <span className={cn("font-display text-xs font-semibold text-muted-foreground tnum", className)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-md border bg-muted/60 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground tnum",
+        className,
+      )}
+    >
       {code}
     </span>
   );
