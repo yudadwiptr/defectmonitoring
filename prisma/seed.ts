@@ -72,6 +72,12 @@ function defaultDescription(d: SeedDefect): string {
 async function main() {
   const now = new Date();
 
+  // `--if-empty`: hanya isi kalau database masih kosong (dipakai saat build di hosting)
+  if (process.argv.includes("--if-empty") && (await prisma.defect.count()) > 0) {
+    console.log("Seed dilewati: database sudah berisi data.");
+    return;
+  }
+
   // Reset agar seed idempoten
   await prisma.workspace.deleteMany();
 

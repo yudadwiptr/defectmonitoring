@@ -4,16 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "node scripts/build.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "db:prepare": "node scripts/prisma-schema.mjs",
     "db:setup": "node scripts/setup-db.mjs",
-    "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "db:push": "npm run db:prepare && prisma db push --schema prisma/runtime.prisma",
+    "db:seed": "npm run db:prepare && tsx prisma/seed.ts",
+    "db:studio": "npm run db:prepare && prisma studio --schema prisma/runtime.prisma",
+    "postinstall": "node scripts/prisma-schema.mjs && prisma generate --schema prisma/runtime.prisma"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

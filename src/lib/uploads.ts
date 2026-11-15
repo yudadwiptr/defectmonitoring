@@ -34,9 +34,17 @@ export async function saveAttachmentFile(file: File, defectId: string): Promise<
   }
   const ext = EXT_BY_MIME[file.type];
   const dir = path.join(UPLOAD_ROOT, defectId);
-  await mkdir(dir, { recursive: true });
   const stored = `${Date.now()}-${randomBytes(4).toString("hex")}.${ext}`;
-  await writeFile(path.join(dir, stored), Buffer.from(await file.arrayBuffer()));
+  try {
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, stored), Buffer.from(await file.arrayBuffer()));
+  } catch (e) {
+    const code = (e as NodeJS.ErrnoException).code;
+    if (code === "EROFS" || code === "EACCES" || code === "EPERM") {
+      throw new Error("Server ini tidak bisa menyimpan file (sistem file hanya-baca), lampiran dilewati");
+    }
+    throw e;
+  }
   return {
     filePath: `/uploads/${defectId}/${stored}`,
     fileName: file.name && file.name !== "blob" ? file.name : `screenshot.${ext}`,

@@ -60,9 +60,26 @@ angka yang diharapkan di dashboard.
 
 ## Pindah ke PostgreSQL
 
-1. Ubah `provider = "sqlite"` menjadi `provider = "postgresql"` di `prisma/schema.prisma`.
-2. Isi `DATABASE_URL` di `.env` dengan URL Postgres.
-3. Jalankan `npm run db:setup`.
+Cukup isi `DATABASE_URL` dengan URL Postgres (`postgresql://...`) lalu jalankan
+`npm run db:setup`. Provider dipilih otomatis: `scripts/prisma-schema.mjs` membuat
+`prisma/runtime.prisma` dari `prisma/schema.prisma` dengan provider `postgresql`
+kalau URL-nya Postgres, atau `sqlite` kalau bukan. Model, kolom, index, dan relasi
+identik di kedua database (enum disimpan sebagai string, daftar fase sebagai JSON teks).
 
-Model, kolom, index, dan relasi tidak perlu diubah: schema sengaja tidak memakai
-tipe khusus SQLite (enum disimpan sebagai string, daftar fase sebagai JSON teks).
+## Deploy ke Vercel
+
+SQLite tidak bisa dipakai di Vercel (sistem file hanya-baca dan tidak persisten), jadi
+butuh Postgres yang di-hosting, misalnya Neon atau Supabase (gratis), atau Vercel Postgres.
+
+1. Buat database Postgres dan salin connection string-nya.
+2. Di Vercel, Settings → Environment Variables, isi:
+   - `DATABASE_URL` = `postgresql://...` (wajib)
+   - `SEED_IF_EMPTY` = `true` kalau ingin data contoh terisi otomatis saat database masih kosong (opsional)
+   - `NEXT_PUBLIC_APP_URL` = `https://nama-app.vercel.app` untuk gambar Open Graph (opsional)
+3. Redeploy. Perintah build (`node scripts/build.mjs`) akan memilih provider, menjalankan
+   `prisma generate` dan `prisma db push`, seed kalau diminta, lalu `next build`.
+
+Batasan di Vercel: lampiran screenshot disimpan ke folder `public/uploads/`, yang di Vercel
+tidak bisa ditulis. Defect tetap tersimpan, tapi lampirannya dilewati dengan peringatan.
+Untuk lampiran di hosting serverless, perlu penyimpanan objek (Vercel Blob, S3) yang belum
+termasuk MVP.

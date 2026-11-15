@@ -1,5 +1,6 @@
-// Satu perintah setup database: salin .env jika belum ada, generate client,
-// push schema, lalu isi seed. Jalankan dengan `npm run db:setup`.
+// Satu perintah setup database: salin .env jika belum ada, pilih provider
+// sesuai DATABASE_URL, generate client, push schema, lalu isi seed.
+// Jalankan dengan `npm run db:setup`.
 import { existsSync, copyFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 
@@ -9,8 +10,9 @@ if (!existsSync(".env")) {
 }
 
 const steps = [
-  "npx prisma generate",
-  "npx prisma db push --skip-generate",
+  "node scripts/prisma-schema.mjs",
+  "npx prisma generate --schema prisma/runtime.prisma",
+  "npx prisma db push --skip-generate --schema prisma/runtime.prisma",
   "npx tsx prisma/seed.ts",
 ];
 

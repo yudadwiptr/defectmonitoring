@@ -48,3 +48,6 @@ next-env.d.ts
 # lampiran upload (dev)
 /public/uploads/*
 !/public/uploads/.gitignore
+
+# schema prisma hasil generate (provider mengikuti DATABASE_URL)
+/prisma/runtime.prisma
